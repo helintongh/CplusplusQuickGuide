@@ -1,3 +1,6 @@
+#include <iostream>
+
+using namespace std;
 /*
 	==>形参带默认值的函数
 	1.给默认值的时候从右向左给
