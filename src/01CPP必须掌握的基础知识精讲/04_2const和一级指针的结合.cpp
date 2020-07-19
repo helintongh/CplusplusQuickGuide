@@ -2,7 +2,7 @@
 #include <typeinfo>
 using namespace std;
 
-// <= 是区分左右值的符号
+// 注释里 <= 是区分左右值的符号
 
 /*
 const和一级指针的结合
