@@ -53,7 +53,7 @@ int main()
 	//int *const p = &a; // *p依然可赋值,p不可,是错的
 
 	// const 指针和普通变量的结合,以下都可以编译成功
-	int *q1 = nullptr; // NULL不好容易和整数混用
+	int *q1 = nullptr; // NULL不好,容易和整数混用
 	int *const q2 = nullptr;
 
 	cout << typeid(q1).name() << endl; // 类型为int *
