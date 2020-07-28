@@ -4,8 +4,8 @@ using namespace std;
 
 /*
 浅拷贝解决方法：自定义拷贝构造函数和赋值重载函数
-String类型
-循环队列 Queue
+自定义一个:String类型
+后面会实现一个循环队列 Queue
 */
 class String
 {
