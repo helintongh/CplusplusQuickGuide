@@ -1,11 +1,3 @@
-/*** 
- * @Author: helintongh
- * @Date: 2020-07-30 23:42:26
- * @LastEditTime: 2020-07-30 23:58:24
- * @LastEditors: helintongh
- * @Description: 
- * @FilePath: /hlt/C++模板/理解函数模板.cpp
- */
 
 #include <iostream>
 #include <cstring>

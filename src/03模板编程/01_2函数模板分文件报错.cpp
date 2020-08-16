@@ -1,11 +1,4 @@
-/*** 
- * @Author: helintongh
- * @Date: 2020-07-30 23:59:24
- * @LastEditTime: 2020-07-31 00:15:45
- * @LastEditors: helintongh
- * @Description: 
- * @FilePath: /hlt/C++模板/函数模板分文件报错.cpp
- */
+
 #include <iostream>
 using namespace std;
 

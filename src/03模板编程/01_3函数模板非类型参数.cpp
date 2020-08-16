@@ -1,11 +1,4 @@
-/*** 
- * @Author: helintongh
- * @Date: 2020-08-16 10:35:42
- * @LastEditTime: 2020-08-16 10:40:10
- * @LastEditors: helintongh
- * @Description: 
- * @FilePath: /hlt/C++模板/理解类模板.cpp
- */
+
 #include <iostream>
 using namespace std;
 /*
