@@ -1,7 +1,7 @@
 /*** 
  * @Author: helintongh
  * @Date: 2020-08-23 20:19:11
- * @LastEditTime: 2020-08-23 20:57:31
+ * @LastEditTime: 2020-08-24 22:41:37
  * @LastEditors: helintongh
  * @Description: 
  * @FilePath: /hlt/运算符重载/实现String.cpp
@@ -70,6 +70,27 @@ public:
 	// char ch = str6[6];  不允许修改！str6[6] = '7'
 	const char& operator[](int index)const { return _pstr[index]; } // 常方法不允许修改
 
+	// 给String字符串类型提供迭代器的实现
+	class iterator
+	{
+	public:
+		iterator(char *p = nullptr) :_p(p) {}
+		bool operator!=(const iterator &it) // 实现!=的重载
+		{
+			return _p != it._p; // 当前迭代器指针 _p 与 迭代器指针it._p进行比较
+		}
+		void operator++() // 实现++的重载
+		{
+			++_p;
+		}
+		char& operator*() { return *_p; } // 迭代器解引用
+	private:
+		char *_p; // 用指针来访问String底层的每一个char型元素
+	};
+	// begin返回的是容器底层首元素的迭代器的表示
+	iterator begin() { return iterator(_pstr); }
+	// end返回的是容器末尾元素后继位置的迭代器的表示
+	iterator end() { return iterator(_pstr + length()); }
 private:
 	char *_pstr; // String是对char*的封装
 
@@ -90,12 +111,12 @@ String operator+(const String &lhs, const String &rhs)
 String operator+(const String &lhs, const String &rhs)
 {
 	//char *ptmp = new char[strlen(lhs._pstr) + strlen(rhs._pstr) + 1];
-	String tmp;
-	tmp._pstr = new char[strlen(lhs._pstr) + strlen(rhs._pstr) + 1];
+	String tmp;	// 直接定义一个String对象
+	tmp._pstr = new char[strlen(lhs._pstr) + strlen(rhs._pstr) + 1]; // 直接对String对象进行内存开辟
 	strcpy(tmp._pstr, lhs._pstr);
 	strcat(tmp._pstr, rhs._pstr); // 直接连接不行,要考虑字符串内存空间
 	//delete[]ptmp;
-	return tmp; // 不用delete是因为放在String对象中,自动析构
+	return tmp; // 不用delete是因为tmp是String对象,自动析构
 }
 ostream& operator<<(ostream &out, const String &str)
 {
@@ -136,6 +157,24 @@ int main()
 	strcpy(buf, str6.c_str());
 	cout << "buf:" << buf << endl;
 
+    // 迭代器的实现的测试代码
+    	// 迭代器的功能：提供一种统一的方式，来透明的遍历容器
+	String str = "hello world!"; // str叫容器吗？是的.. 底层放了一组char类型的字符
+	// 容器的迭代器类型 iterator
+	//String::iterator it = str.begin();
+	auto it = str.begin();
+	for (; it != str.end(); ++it)
+	{
+		cout << *it << " ";
+	}
+	cout << endl;
+
+	// c++11 foreach的方式来遍历容器的内部元素的值=>底层，还是通过迭代器进行遍历的
+	for(char ch : str) // 依赖于迭代器的begin和end函数,本质上和上面的实现一致
+	{
+		cout << ch << " ";
+	}
+	cout << endl;
 
 	return 0;
 }
