@@ -1,7 +1,7 @@
 /*** 
  * @Author: helintongh
  * @Date: 2020-08-29 11:21:22
- * @LastEditTime: 2020-08-29 15:56:50
+ * @LastEditTime: 2020-08-29 16:37:18
  * @LastEditors: helintongh
  * @Description: 
  * @FilePath: /hlt/运算符重载/深入理解new和delete.cpp
@@ -25,12 +25,12 @@ delete (int*)p 和 free(p) 没有区别
 new -> operator new
 delete -> operator delete
 
-new和delete能混用吗？C++为什么区分单个元素和数组的内存分配和释放呢？
+new和delete能混用吗?=>new[]和delete能混用吗 C++为什么区分单个元素和数组的内存分配和释放呢？
 new delete
 new[] delete[]
-对于普通的编译器内置类型 new/delete[]   new[]/delete
+对于普通的编译器内置类型 new/delete[]   new[]/delete => new和delete[] 以及 new[]和delete可以混用
 
-自定义的类类型，有析构函数，为了调用正确的析构函数，那么开辟对象数组的时候，
+自定义的类类型，有析构函数，为了调用正确的析构函数，那么开辟对象数组的时候，不可以混用
 会多开辟4个字节，记录对象的个数
 */
 
@@ -63,6 +63,15 @@ void operator delete[](void *ptr)
 	cout << "operator delete[] addr:" << ptr << endl;
 	free(ptr);
 }
+
+class Test
+{
+public:
+	Test(int data = 10) { cout << "Test()" << endl; }
+	~Test() { cout << "~Test()" << endl; }
+private:
+	int ma;
+};
 int main()
 {
   /*
@@ -83,5 +92,24 @@ int main()
     cerr << err.what() << endl;
   }
   
+  
+	Test *p1 = new Test();
+	delete []p1;
+
+	/*
+	operator new[] addr:00940268
+	Test()
+	Test()
+	Test()
+	Test()
+	Test()
+	~Test()
+	operator delete addr:0094026C
+	*/
+	Test *p2 = new Test[5];
+	cout << "p2:" << p2 << endl;
+	delete[] p2; // Test[0]对象析构， 直接free(p2)
+	
+
   return 0;
 }
