@@ -64,7 +64,7 @@ int main()
 		if (*it1 % 2 == 0)
 		{
 			// 这里的迭代器在第一次insert之后，iterator就失效了
-			it1 = vec1.insert(it1, *it1-1);
+			vec1.insert(it1, *it1-1);
 			//++it1;
 			//break;
 		}
