@@ -1,0 +1,32 @@
+<剑指offer>
+1. 情况1
+class A{} sizeof(A) = 1
+class B : public A{} sizeof(B) = 1
+
+2.基类添加一个虚函数
+class A
+{
+virtual void fun(){}
+}
+
+class B : public A
+{
+
+}
+sizeof(B) = 4 vfptr
+
+3. B虚继承了带有虚函数的A
+class B : virtual public A
+{
+
+}
+sizeof(B) = 4 vfptr + 4 vbptr = 8
+
+vs2015通过
+cl 源文件 查看
+
+vfptr/vbptr
+vftable/vbtable
+
+类有虚函数,类就有vfptr指向vftable
+派生类由基类虚继承来会有vbptr,vbtable放的是vbptr以及虚基类数据派生类的(关于继承来的数据)偏移量
