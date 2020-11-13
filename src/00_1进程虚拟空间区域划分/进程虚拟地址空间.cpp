@@ -1,7 +1,4 @@
-﻿// 进程虚拟地址空间.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
-
-#include "pch.h"
+﻿
 #include <iostream>
 using namespace std;
 // 这一部分全局变量(无论是否静态)都叫数据,都会产生符号
