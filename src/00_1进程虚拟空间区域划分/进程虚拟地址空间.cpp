@@ -20,8 +20,6 @@ int main()
 	static int f = 0;  // bss
 	static int g;	   // bss 
 	// cout 也是指令
-	// cout << c << g << endl; 打印c肯定不为0栈上无效值,打印g一定为0
+	// cout << c << g << endl; 打印c有可能不为0,c相当于栈上的无效值,打印g一定为0
 	return 0; // 在text存放
 }
-
-
