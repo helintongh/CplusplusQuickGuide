@@ -24,7 +24,7 @@ public:
 		}
 		else
 		{
-			_pstr = new char[1]; // 为空开辟一个空间赋值为'\0'
+			_pstr = new char[1]; // 为空也开辟一个空间赋值为'\0'
 			*_pstr = '\0';
 		}
 	}
