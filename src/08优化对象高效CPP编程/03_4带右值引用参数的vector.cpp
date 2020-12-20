@@ -1,6 +1,100 @@
 #include <iostream>
 
 using namespace std;
+// 用CMyString来测试vector
+class CMyString
+{
+public:
+	CMyString(const char *str = nullptr)
+	{
+		cout << "CMyString(const char*)" << endl;
+		if (str != nullptr)
+		{
+			mptr = new char[strlen(str) + 1];
+			strcpy(mptr, str);
+		}
+		else
+		{
+			mptr = new char[1];
+			*mptr = '\0';
+		}
+	}
+	~CMyString()
+	{
+		cout << "~CMyString" << endl;
+		delete[]mptr;
+		mptr = nullptr;
+	}
+	// 带左值引用参数的拷贝构造
+	CMyString(const CMyString &str)
+	{
+		cout << "CMyString(const CMyString&)" << endl;
+		mptr = new char[strlen(str.mptr) + 1];
+		strcpy(mptr, str.mptr);
+	}
+	// 带右值引用参数的拷贝构造
+	CMyString(CMyString &&str) // str引用的就是一个临时对象
+	{
+		cout << "CMyString(CMyString&&)" << endl;
+		mptr = str.mptr;
+		str.mptr = nullptr;
+	}
+	// 带左值引用参数的赋值重载函数
+	CMyString& operator=(const CMyString &str)
+	{
+		cout << "operator=(const CMyString&)" << endl;
+		if (this == &str)
+			return *this;
+
+		delete[]mptr;
+
+		mptr = new char[strlen(str.mptr) + 1];
+		strcpy(mptr, str.mptr);
+		return *this;
+	}
+	// 带右值引用参数的赋值重载函数
+	CMyString& operator=(CMyString &&str) // 临时对象
+	{
+		cout << "operator=(CMyString&&)" << endl;
+		if (this == &str)
+			return *this;
+
+		delete[]mptr;
+
+		mptr = str.mptr;
+		str.mptr = nullptr;
+		return *this;
+	}
+	const char* c_str()const { return mptr; }
+private:
+	char *mptr;
+
+	friend CMyString operator+(const CMyString &lhs,
+		const CMyString &rhs);
+	friend ostream& operator<<(ostream &out, const CMyString &str);
+};
+/*
+    char *ptmp = new char[strlen(lhs.mptr) + strlen(rhs.mptr) + 1];
+    	效率非常低,开辟了大量空间然后释放。
+*/
+CMyString operator+(const CMyString &lhs,
+	const CMyString &rhs)
+{
+	//char *ptmp = new char[strlen(lhs.mptr) + strlen(rhs.mptr) + 1];
+	CMyString tmpStr;
+	tmpStr.mptr = new char[strlen(lhs.mptr) + strlen(rhs.mptr) + 1];
+	strcpy(tmpStr.mptr, lhs.mptr);
+	strcat(tmpStr.mptr, rhs.mptr);
+	//delete []ptmp;
+	return tmpStr; // 最终要调用拷贝构造函数
+	//return CMyString(ptmp);
+}
+ostream& operator<<(ostream &out, const CMyString &str)
+{
+	out << str.mptr;
+	return out;
+}
+
 /*
 	如果每一个类都需要左值,右值都实现一遍会大大增加代码量
 */
@@ -16,18 +110,13 @@ struct Allocator
 	{
 		free(p);
 	}
-	/*void construct(T *p, const T &val) // 负责对象构造,接收左值
+	void construct(T *p, const T &val) // 负责对象构造,接收左值
 	{
 		new (p) T(val); // 定位new
 	}
 	void construct(T *p, T &&val) // 负责对象构造,接收右值
 	{
-		new (p) T(std::move(val)); // 定位new
-	}*/
-	template<typename Ty>
-	void construct(T *p, Ty &&val)
-	{
-		new (p) T(std::forward<Ty>(val));
+		new (p) T(std::move(val)); // 语句new (p) T(val);接收的仍是左值,需要用move移动语义
 	}
 	void destroy(T *p) // 负责对象析构
 	{
@@ -116,7 +205,7 @@ public:
 	int size()const { return _last - _first; }
 
 	//////////////////////////////////////////
-	/*void push_back(const T &val) // 接收左值
+	void push_back(const T &val) // 接收左值
 	{
 		if (full())
 			expand();
@@ -125,25 +214,12 @@ public:
 		_last++;
 	}
 
-	void push_back(T &&val) // 接收右值 一个右值引用变量本身还是一个左值
+	void push_back(T &&val) // 接收右值 一个右值引用变量本身还是一个左值。
 	{
 		if (full())
 			expand();
-
-		_allocator.construct(_last, std::move(val));
-		_last++;
-	}*/
-	// void push_back(CMyString &val)
-	// CMyString&& + && = void push_back(CMyString&&val)
-	template<typename Ty> // 函数模板的类型推演 + 引用折叠
-	void push_back(Ty &&val) //Ty CMyString& + && = CMyString&
-	{
-		if (full())
-			expand();
-
-		// move(左值)：移动语义，得到右值类型   (int&&)a
-		// forward:类型完美转发，能够识别左值和右值类型
-		_allocator.construct(_last, std::forward<Ty>(val));
+		// 如果语句是_allocator.construct(_last, val);尽管能接收临时对象,但construct依然匹配左值。(因为右值引用本身还是左值)
+		_allocator.construct(_last, std::move(val)); // move移动语义把val强转为右值引用类型
 		_last++;
 	}
 private:
@@ -173,3 +249,17 @@ private:
 		_end = _first + 2 * size;
 	}
 };
+
+
+int main()
+{
+	CMyString str1 = "aaa";
+	vector<CMyString> vec;
+
+	cout << "-----------------------" << endl;
+	vec.push_back(std::move(str1)); // CMyString&
+	vec.push_back(CMyString("bbb"));   // CMyString&& move  forword
+	cout << "-----------------------" << endl;
+
+	return 0;
+}
