@@ -13,21 +13,21 @@ public:
 			mcount = 1;
 	}
 	void addRef() { mcount++; } // 增加引用计数
-	void delRef() { --mcount; }
+	int delRef() { return --mcount; }
 private:
 	T *mptr;
-	int mcount;
+	int mcount; // automic_int 在shared_ptr和weak_ptr中是原子类型
 };
 
 
 template<typename T>
-class CSmartPtr // 非常简单的智能指针
+class CSmartPtr // 非常简单的智能指针 相比于shared_ptr多线程环境下就不行了,没有锁,shared_ptr和weak_ptr是线程安全的
 {
 public:
 	CSmartPtr(T *ptr = nullptr)
 		:mptr(ptr) 
 	{
-		mpRefCnt = new <T>RefCnt();
+		mpRefCnt = new RefCnt<T>();
 	}
 	~CSmartPtr() 
 	{ 
@@ -58,7 +58,7 @@ public:
 
 		mptr = src.mptr;
 		mpRefCnt = src.mpRefCnt;
-		mpRefCnt>addRef();
+		mpRefCnt->addRef();
 		return *this;
 	}
 private:
@@ -77,6 +77,11 @@ int main()
 	*/
 	CSmartPtr<int> ptr1(new int);
 	CSmartPtr<int> ptr2(ptr1);
+	CSmartPtr<int> ptr3;
+	ptr3 = ptr2;
+
+	*ptr1 = 20;
+	cout << *ptr2 << " " << *ptr3 << endl;
 
 	return 0;
 }
