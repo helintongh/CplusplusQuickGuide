@@ -61,7 +61,7 @@ int main()
 	unique_ptr<int> p1(new int);
 	unique_ptr<int> p2(std::move(p1));
 
-
+	// *p1一定会失败,因为p1的资源已经移动给p2。是显示的资源转移
 
 	/*
 	1. 之前的CSmartPtr存在的问题
