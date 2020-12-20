@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <cstring>
 using namespace std;
 // 用CMyString来测试vector
 class CMyString
@@ -263,3 +263,18 @@ int main()
 
 	return 0;
 }
+
+/*
+output:
+CMyString(const char*)
+-----------------------
+CMyString(CMyString&&)
+CMyString(const char*)
+CMyString(CMyString&&)
+~CMyString
+-----------------------
+~CMyString
+~CMyString
+~CMyString
+*/
+// 可以看到匹配到了右值引用参数
