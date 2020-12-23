@@ -11,6 +11,7 @@ weak_ptr: 弱智能指针 不会改变资源的引用计数
 weak_ptr ==> shared_ptr ==> 资源(内存)
 
 强智能指针循环(交叉)引用是什么问题?什么结构?怎么解决?
+造成new出来的资源无法释放,资源泄露。
 */
 class B;
 class A
@@ -33,6 +34,9 @@ int main()
 {
 	shared_ptr<A> pa(new A());
 	shared_ptr<B> pb(new B());
+
+	pa->_ptrb = pb;
+	pb->_ptra = pa;
 
 	cout << pa.use_count() << endl; // 打印引用计数
 	cout << pb.use_count() << endl; 
