@@ -63,7 +63,6 @@ int main()
 	auto it1 = find_if(vec.begin(), vec.end(),
 		bind2nd(less<int>(), 70));
 	*/
-	*/
 	if (it1 != vec.end())
 	{
 		vec.insert(it1, 70);
