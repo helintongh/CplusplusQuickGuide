@@ -13,7 +13,7 @@ using namespace std;
 bind1st : operator()的第一个形参变量绑定成一个确定的值
 bind2nd : operator()的第二个形参变量绑定成一个确定的值
 
-2.C++11从Boost库中引入了bind绑定器和function函数对象机制
+2.C++11引入了bind绑定器和function函数对象机制
 
 3.lambda表达式 底层依赖函数对象的机制实现的
 */
@@ -28,13 +28,13 @@ void showContainer(Container &con)
 	}
 	cout << endl;
 }
-
+// template表示迭代器类型和函数对象,Compare实际上的函数对象
 template<typename Iterator, typename Compare>
 Iterator my_find_if(Iterator first, Iterator last, Compare comp)
 {
 	for (; first != last; ++first)
 	{
-		if (comp(*first)) // comp.operator()(*first)
+		if (comp(*first)) // comp.operator()(*first) -> 相当于调用了函数对象的()重载
 		{
 			return first;
 		}
@@ -47,19 +47,19 @@ template<typename Compare, typename T>
 class _mybind1st // 绑定器是函数对象的一个应用
 {
 public:
-	_mybind1st(Compare comp, T val)
+	_mybind1st(Compare comp, T val)	// 构造函数
 		:_comp(comp), _val(val) 
 	{}
-	bool operator()(const T &second)
+	bool operator()(const T &second) // ()运算符重载函数
 	{
-		return _comp(_val, second); // greater
+		return _comp(_val, second); // greater->底层做事情实际上还是一个二元函数对象
 	}
 private:
-	Compare _comp;
+	Compare _comp; // _comp是一个函数对象
 	T _val;
 };
 
-//mybind1st(greater<int>(), 70)
+//调用该函数的例子mybind1st(greater<int>(), 70)
 template<typename Compare, typename T>
 _mybind1st<Compare,T> mybind1st(Compare comp, const T &val)
 {
