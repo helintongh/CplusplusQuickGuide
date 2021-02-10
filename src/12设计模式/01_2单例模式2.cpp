@@ -15,6 +15,7 @@ A *p3 = new A();
 懒汉式单例模式：唯一的实例对象,直到第一次获取它的时候,才产生
 */
 // 懒汉式单例模式 => 是不是线程安全的呢？   => 线程安全的懒汉式单例模式
+// mutex mtx;
 class Singleton
 {
 public:
@@ -25,7 +26,7 @@ public:
 		if (instance == nullptr)
 		{
 			lock_guard<std::mutex> guard(mtx);
-			if (instance == nullptr)
+			if (instance == nullptr) // 防止死锁,双重判断
 			{
 				/*
 					1. 开辟内存
