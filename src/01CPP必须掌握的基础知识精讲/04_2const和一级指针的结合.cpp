@@ -28,7 +28,7 @@ const int *const p = &a; // 上面两种情况的结合。 *p = &b 不允许 p =
 
 const如果右边没有指针*的话,cosnt是不参与类型的。int *const 和int *是同类型
 
-总结const和指针的类型转换公式：
+总结const和指针的类型转换公式：(总结的很烂,建议直接看下面概述,我自己后面都有点看不懂我在写啥)
 int*    <=    const int*    是错误的！
 const int*  <=   int*       是可以的！
 
@@ -38,6 +38,33 @@ const int** <= int**        是错误的！
 
 int** <= int*const*			是错误的！
 int*const* <= int**         是可以的！
+
+金科玉律:const默认作用于其左边的东西，否则作用于其右边的东西：
+
+const int* :
+const只有右边有东西，所以const修饰int成为常量整型，然后*再作用于常量整型。
+所以这是a pointer to a constant integer（指向一个整型，不可通过该指针改变其指向的内容，但可改变指针本身所指向的地址）
+
+int const *:
+再看这个，const左边有东西，所以const作用于int，*再作用于int const所以这还是 a pointer to a constant integer（同上）
+
+int* const :
+这个const的左边是*，所以const作用于指针（不可改变指向的地址），
+所以这是a constant pointer to an integer，可以通过指针改变其所指向的内容但只能指向该地址，不可指向别的地址。
+
+const int* const:
+这里有两个const。左边的const 的左边没东西，右边有int那么此const修饰int。右边的const作用于*使得指针本身变成const（不可改变指向地址），
+那么这个是a constant pointer to a constant integer，不可改变指针本身所指向的地址也不可通过指针改变其指向的内容。
+
+int const *const:
+这里也出现了两个const，左边都有东西，那么左边的const作用于int，右边的const作用于*，
+于是这个还是是a constant pointer to a constant integer
+
+int const * const *:懒得分析了，
+照葫芦画瓢，a pointer to a constant pointer to a constant integer，其实就是指向上边那个的东西的指针。
+
+int const * const * const:
+上边的指针本身变成const，a constant pointer to a constant pointer to a constant integer。
 */
 
 int main()
