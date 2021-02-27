@@ -23,11 +23,13 @@
 
 ### 从底层原理探究C++
 
+**知道了为什么?就知道了知识。**
+
+有一部文章我全部以源代码+注释形式书写直接看源文件即可,看了示例代码与注释就能弄明白相应的知识点。只有关键部分会有专门文章总结。代码才是最好的老师。
+
 [一.虚拟内存,函数堆栈调用过程,编译链接详解--从底层来理解代码](doc/advance/a1.md)
 
-有一部文章我全部以源代码+注释形式书写直接看源文件即可。只有关键部分会有专门文章总结。
-
-[二.C++基础精髓](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/01CPP%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B2%BE%E8%AE%B2)
+[二.C++基础精髓-源文件文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/01CPP%E5%BF%85%E9%A1%BB%E6%8E%8C%E6%8F%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%B2%BE%E8%AE%B2)
 
 - C++基础精髓依次讲述了C++函数知识,const关键字与指针,左值右值引用,以及C++的内存管理。
 
@@ -35,16 +37,28 @@
 
 - [什么是右值](doc/advance/a2.md)
 
-[三.C++类的各种细节和原理](doc/advance/a3.md)
+[三.C++类的各种细节和原理-源文件文件夹](doc/advance/a3.md)
 
 源文件在 [点此跳转](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/02%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%86%E8%8A%82%E4%B8%8E%E5%8E%9F%E7%90%86)
-为什么C++会有一些函数？赋值构造函数和拷贝构造函数解决了什么问题(浅拷贝)？ 构造函数,析构函数,拷贝构造函数,赋值构造函数,以及后续会讲到的move构造函数(这个学名叫move constructor,有的中文翻译为带右值引用参数的构造函数翻译的不行)
+为什么C++会有这一些函数？赋值构造函数和拷贝构造函数解决了什么问题(浅拷贝)？ 构造函数,析构函数,拷贝构造函数,赋值构造函数,以及后续会讲到的move构造函数是为什么存在?(这个学名叫move constructor,有的中文翻译为带右值引用参数的构造函数翻译的不行)
 
-[四.函数模板](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/03%E6%A8%A1%E6%9D%BF%E7%BC%96%E7%A8%8B)
+[四.函数模板-源文件文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/03%E6%A8%A1%E6%9D%BF%E7%BC%96%E7%A8%8B)
 
-要明确模板的实例化,模板的实参推演,模板特例化,部分特例化。
+要明确模板的实例化,模板的实参推演,模板特例化,部分特例化。 一文了解模板我实现了一个vector,这个vector没有迭代器,后面会实现带迭代器版本。 
+[模板拾遗及实现一个vector](doc/advance/a4.md)
 
-[五.运算符重载](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/04%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD)
+[五.运算符重载-源文件文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/04%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD)
+
+运算符重载有什么用?要明白运算符重载与泛型算法密切相关。
+1. 泛型算法参数接收的都是迭代器,泛型算法往往是给所有容器用的全局函数,泛型算法有一套方法能够统一的遍历所有的容器的元素(通过迭代器)。迭代器一般实现为容器的内部嵌套类型,因为不同容器操作不同。
+2. 而迭代器大量运用到了运算符重载。
+
+[通过实现近乎完整String和迭代器失效以及new和delete重载来学习运算符重载](doc/advance/a5.md)
+
+[六.继承与多态-源文件文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/05%E7%BB%A7%E6%89%BF%E5%92%8C%E5%A4%9A%E6%80%81)
+
+[一文理解继承与多态](doc/advance/a6.md)
+
 
 ### C++的优化以及C++11-20的新特性的探索
 
