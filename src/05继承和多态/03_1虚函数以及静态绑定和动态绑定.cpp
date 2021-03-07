@@ -74,7 +74,7 @@ int main()
 	mov ecx, dword ptr[eax]   -> eax现在是虚函数地址前四个字节即&Derive::show()的地址放到ecx
 	call ecx（虚函数的地址） 动态（运行时期）的绑定（函数的调用）
 	*/
-	pb->show(); //静态（编译时期）的绑定（函数的调用）call  Base::show (01612DAh)
+	pb->show(); //如果是静态（编译时期）的绑定（函数的调用）call  Base::show (01612DAh)。实际是动态绑定,是执行的Derive的show函数
 	
 	/*
 	Base::show(int) 是一个虚函数，此时就得动态绑定了
@@ -82,7 +82,7 @@ int main()
 	mov ecx, dword ptr[eax]
 	call ecx（虚函数的地址） 动态（运行时期）的绑定（函数的调用）
 	*/
-	pb->show(10); //静态绑定 call  Base::show (01612B2h)
+	pb->show(10); //如果是静态绑定 call  Base::show (01612B2h)
 
 	cout << sizeof(Base) << endl; // 没有虚函数大小为4    多了虚函数指针      8
 	cout << sizeof(Derive) << endl; // 没有虚函数大小为8  多了虚函数指针      12
@@ -113,6 +113,13 @@ int main()
 	12
 	class Base *
 	class Derive
+	*/
+	Base& pb2 = d;
+	d.show(); 
+	/*
+	作用与
+	Base *pb = &d;
+	pb->show();  一致
 	*/
 
 	return 0;
