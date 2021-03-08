@@ -1,7 +1,7 @@
 # CplusplusQuickGuide
 一篇快速掌握基础C++的教程，最近在Linux下编程较多用到的C++知识有些许荒废了，这个旨在能够快速帮助自己回顾c++的面向对象基本知识。
 
-请先看C++的思维导图 [C++基础](./resource/CPP_basic.png)
+请先看C++的思维导图 ![C++基础](./resource/CPP_basic.md)
 
 ### C++基础快速上手
 
