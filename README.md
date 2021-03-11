@@ -28,7 +28,7 @@
 
 - [什么是右值](doc/advance/a2.md)
 
-[三.C++类的各种细节和原理-源文件文件夹](doc/advance/a3.md)
+[三.C++类的各种细节和原理](doc/advance/a3.md)
 
 源文件在 [点此跳转](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/02%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%86%E8%8A%82%E4%B8%8E%E5%8E%9F%E7%90%86)
 为什么C++会有这一些函数？赋值构造函数和拷贝构造函数解决了什么问题(浅拷贝)？ 构造函数,析构函数,拷贝构造函数,赋值构造函数,以及后续会讲到的move构造函数是为什么存在?(这个学名叫move constructor,有的中文翻译为带右值引用参数的构造函数这种翻译是不太好的)
