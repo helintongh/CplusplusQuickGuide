@@ -62,13 +62,17 @@ stl没有什么好讲的关键构建知识图谱:顺序容器(vector,deque,list)
 ### C++的优化以及C++11-20的新特性的探索
 
 [C++优化及右值引用-源文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/08%E4%BC%98%E5%8C%96%E5%AF%B9%E8%B1%A1%E9%AB%98%E6%95%88CPP%E7%BC%96%E7%A8%8B)
+
 [C++的优化以及右值引用的价值](doc/senior/s1.md) -- 讲解了move和forward,实现了更加完整的vector
 
 [智能指针源文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/09%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88)
+
 [理解智能指针](doc/senior/s2.md)
 
 [function-bind绑定器-lambda-源文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/10bind%E7%BB%91%E5%AE%9A%E5%99%A8%E5%92%8Cfunction%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1)
+
 [C++的函数对象,绑定器,lambda表达式](doc/senior/s3.md)
+
 [lambda表达式详解](doc/senior/s4.md)
 
 [thread库-源文件夹](https://github.com/helintongh/CplusplusQuickGuide/blob/master/src/11Thread%E5%BA%93/01_1cpp_thread%E7%B1%BB%E7%BC%96%E5%86%99%E5%A4%9A%E7%BA%BF%E7%A8%8B.cpp)
