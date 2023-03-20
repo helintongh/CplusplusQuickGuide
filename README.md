@@ -34,10 +34,15 @@
 源文件在 [点此跳转](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/02%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%86%E8%8A%82%E4%B8%8E%E5%8E%9F%E7%90%86)
 为什么C++会有这一些函数？赋值构造函数和拷贝构造函数解决了什么问题(浅拷贝)？ 构造函数,析构函数,拷贝构造函数,赋值构造函数,以及后续会讲到的move构造函数是为什么存在?(这个学名叫move constructor,有的中文翻译为带右值引用参数的构造函数这种翻译是不太好的)
 
-[四.函数模板-源文件文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/03%E6%A8%A1%E6%9D%BF%E7%BC%96%E7%A8%8B)
+### 模板编程到模板元编程
 
-要明确模板的实例化,模板的实参推演,模板特例化,部分特例化。 一文了解模板我实现了一个vector,这个vector没有迭代器,后面会实现带迭代器版本。 
-[模板拾遗及实现一个vector](doc/advance/a4.md)
+[函数模板-源代码文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/03%E6%A8%A1%E6%9D%BF%E7%BC%96%E7%A8%8B)
+
+要明确模板的实例化,模板的实参推演,模板特例化,部分特例化。 一文了解模板以及实现一个vector,这个vector没有迭代器,后面会实现带迭代器版本。 
+
+[模板基础与实战(实现vector)](doc/advance/a4.md)
+
+[模板元编程基础(编译器计算)](doc/advance/meta_program.md)
 
 [五.运算符重载-源文件文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/04%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD)
 
@@ -70,14 +75,20 @@ stl没有什么好讲的关键构建知识图谱:顺序容器(vector,deque,list)
 
 [理解智能指针](doc/senior/s2.md)
 
+#### c++函数式编程
+
 [function-bind绑定器-lambda-源文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/10bind%E7%BB%91%E5%AE%9A%E5%99%A8%E5%92%8Cfunction%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1)
 
-[C++的函数对象,绑定器,lambda表达式](doc/senior/s3.md)
+[C++的函数对象function,bind绑定器](doc/senior/s3.md)
 
 [lambda表达式详解](doc/senior/s4.md)
 
-[thread库-源文件夹](https://github.com/helintongh/CplusplusQuickGuide/blob/master/src/11Thread%E5%BA%93/01_1cpp_thread%E7%B1%BB%E7%BC%96%E5%86%99%E5%A4%9A%E7%BA%BF%E7%A8%8B.cpp)
+[实战:字符串分割技术以及function原理](doc/senior/split_str.md) -- 用来理解function,bind以及lambda
+
+[]
 
 ### 并发编程
+
+[thread库-源文件夹](https://github.com/helintongh/CplusplusQuickGuide/blob/master/src/11Thread%E5%BA%93/01_1cpp_thread%E7%B1%BB%E7%BC%96%E5%86%99%E5%A4%9A%E7%BA%BF%E7%A8%8B.cpp)
 
 [C++20协程原理及使用详解](doc/senior/coro.md)
