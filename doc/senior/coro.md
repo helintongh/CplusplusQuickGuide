@@ -10,7 +10,7 @@ C++的协程api总共有三大组件:
 - Promise 代表了一个异步操作的结果
 - Coroutine Handle 协程处理
 
-### 理解协程
+## 理解协程
 
 要理解协程首先要理解普通程序的调用栈。
 
@@ -28,7 +28,7 @@ int main() {
 
 ![](./resource/coro/01.png)
 
-由图可以知道程序是:
+由图可以知道普通程序是:
 
 一组有序的指令,而最关键的是汇编指令`imul`,前面的指令都是把字节从源位置传到目的位置。而`imul`指令是机器行为的抽象,并且实现了机器状态之间的转换。
 
@@ -69,29 +69,9 @@ int main() {
 
 **thread线程**: 进程中的控制流的抽象(处理器抽象(CPU))
 
-#### 协程支持的四种操作:
+### 协程支持的四种操作:
 
 协程是一种特殊的子例程,尽管理论上来讲两者毫无关联,但是实际机器中协程是例程的超集。
-
-协程中比较难理解的只有yield概念,看如下python代码计算斐波那契数列:
-
-```py
-#!/usr/bin/python
-# -*- coding: UTF-8 -*-
-
-def fab(max):
-    n, a, b = 0, 0, 1
-    while n < max:
-        yield b      # 使用 yield
-        a, b = b, a + b
-        n = n + 1
-
-for n in fab(5):
-    print(n)
-
-```
-
-这里yield的作用就是把一个函数变成一个generator,带有yield 的函数不再是一个普通函数,Python解释器会将其视为一个generator.调用`fab(5)`不会执行fab函数,而是返回一个`iterable`对象.在`for`循环执行时,每次循环都会执行`fab`函数内部的代码,执行到`yield b`时,`fab`函数就返回一个迭代值,下次迭代时,代码从`yield b`的下一条语句继续执行,而函数的本地变量看起来和上次中断执行前是完全一样的,于是函数继续执行,直到再次遇到`yield`。
 
 协程可以通过yield(“让步”)来调用其它协程,接下来的每次协程被调用时,从协程上次yield返回的位置接着执行,通过yield方式转移执行权的协程之间不是调用者与被调用者的关系,而是彼此对称、平等的。由于协程不如子例程那样被普遍所知,下面对它们作简要比较： 
 
@@ -109,7 +89,7 @@ for n in fab(5):
 
 ![](./resource/coro/04.png)
 
-#### 协程状态
+### 协程状态
 
 例程也是有状态的,普通例程的状态等同于其内存。普通例程怎么记录时那个函数被执行的呢。
 
@@ -117,8 +97,113 @@ for n in fab(5):
 
 ![](./resource/coro/05.png)
 
-绿色部分便是保存例程状态的内存对象,其保存是是Function B的状态(函数执行栈)。
+绿色部分便是保存例程状态的内存对象,其保存是是Function B的状态(函数执行栈即是其状态)。
 
 一个程序实际调用栈是这样的:
 
 如下图
+
+![](./resource/coro/06.png)
+
+可以看到普通例程是怎么管理函数调用栈(函数栈帧)的:
+
+invoke(调用): 函数起始地址(栈帧)入栈
+return(返回,等价于Finalize): 函数的栈帧(出入参等)出栈
+
+C语言所有函数都是这种调用.
+
+以上协程定义很明确了如下:
+
+- 保持其自身的状态(函数栈帧Function Frame)
+- 支持除invoke和return外还支持Suspend以及Resume两种操作
+
+## C++中的协程核心
+
+只要用到了这三个`co_await`,`co_yeild`,`co_return`关键字中的一个就会被当作协程。
+
+**C++ 20协程概览图**
+
+![](./resource/coro/07.png)
+
+**协程和普通例程的api调用区别**
+
+
+| 操作     | 例程                    | 协程                    |
+| -------- | ----------------------- | ----------------------- |
+| Invoke   | Function call, e.g. f() | Function call, e.g. f() |
+| Finalize | return statement        | co_return statement     |
+| Suspend  |                         | co_await expression     |
+| Resume   |                         | co_yeild expression     |
+
+由上述可知C++协程有四个核心对象: Function Body(实际待执行的语句), coroutine_handle<>,  promise_type<>, Awaitable对象
+
+### 协程相关的对象
+
+#### 协程帧(coroutine frame)
+
+当caller调用一个协程的时候会先创建一个协程帧，协程帧会创建promise对象，再通过promise对象产生return object
+
+协程帧中主要有这些内容:
+
+- 协程参数
+- 局部变量
+- promise对象
+
+这些内容在协程恢复运行的时候会用到，caller通过协程帧的句柄`std::coroutine_handle`来访问协程帧。
+
+#### promise_type
+
+promise_type 是 promise 对象的类型。promise_type 用于定义一类协程的行为，包括协程创建方式、协程初始化完成和结束时的行为、发生异常时的行为、如何生成 awaiter 的行为以及 co_return 的行为等等。promise 对象可以用于记录/存储一个协程实例的状态。每个协程桢与每个 promise 对象以及每个协程实例是一一对应的。
+
+#### coroutine return object
+
+它是由promise.get_return_object()方法创建的,一种常见的实现手法是会将`coroutine_handle`存储到`coroutine object`内，使得该`return object`获得访问协程的能力。
+
+#### coroutine_handle<>
+
+协程的句柄。
+
+主要用于协程的生命周期控制，协程执行的入口，判断协程是否完成，恢复一个挂起的协程，删除一个协程。
+
+换言之其作用在于访问底层的协程帧、恢复和释放协程帧。
+
+可以通过调用`std::coroutine_handle::resume()`唤醒协程。
+
+#### co_await、awaiter、awaitable
+
+- co_await: 一元操作符定义挂起点
+- awaitable: 支持co_await操作符的类型
+- awaiter: 定义了await_ready、await_suspend 和 await_resume 方法的类型(实现awaiter必须定义这三个函数)
+
+补充:
+- co_return: 定义协程的结束点
+- co_yield: 定义协程的恢复点
+
+### c++协程工作原理
+
+以一个简单的伪代码形式展示协程是如何协作的:
+
+```c++
+Return_t foo() {
+    auto res = co_await awaiter;
+    co_return res;
+}
+```
+
+Return_t: promise return object
+awaiter: 等待一个task完成(是一个对象)
+
+
+
+```cpp
+#include <concepts>
+#include <coroutine>
+#include <exception>
+#include <iostream>
+
+struct ReturnObject {
+    struct promise_type {
+
+    }
+}
+```
