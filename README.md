@@ -42,7 +42,9 @@
 
 [模板基础与实战(实现vector)](doc/advance/a4.md)
 
-[模板元编程基础(编译器计算)](doc/advance/meta_program.md)
+[元编程基础:属性和静态断言](doc/advance/a10.md)
+
+[模板元编程基础(编译期计算)](doc/advance/meta_program.md)
 
 [五.运算符重载-源文件文件夹](https://github.com/helintongh/CplusplusQuickGuide/tree/master/src/04%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD)
 
@@ -85,7 +87,7 @@ stl没有什么好讲的关键构建知识图谱:顺序容器(vector,deque,list)
 
 [实战:字符串分割技术以及function原理](doc/senior/split_str.md) -- 用来理解function,bind以及lambda
 
-[]
+
 
 ### 并发编程
 
