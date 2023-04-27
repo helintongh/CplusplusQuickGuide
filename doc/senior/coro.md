@@ -193,6 +193,76 @@ Return_t foo() {
 Return_t: promise return object
 awaiter: 等待一个task完成(是一个对象)
 
+![](./resource/coro/08.png)
+
+上图即是协程执行流程图.
+
+浅蓝色部分的方法是Return_t关联的promise对象的函数，浅红色部分是co_await等待的awaiter。
+
+**总结**:
+
+协程待执行需要执行的任务中的promise_type对象需要实现至少五个方法:
+
+1. get_return_object(): 用于协程对象返回
+2. initial_suspend(): 控制当前协程是否挂起
+3. final_suspend(): 当协程内语句执行完成时，控制协程是否挂起
+4. return_void(): 保存协程的返回值
+5. unhandled_exception(): 处理异常
+
+awaiter对象对象需要实现至少三个方法:
+
+1. await_ready(): 控制是否挂起协程还是继续执行
+2. await_suspend(): 决定是返回caller还是继续执行
+3. await_resume(): 决定是否恢复caller
+
+这个流程的执行是由编译器根据协程函数生成的代码驱动的，分成三个部分
+
+**协程创建**
+
+上面的代码语义就只有如下两句:
+
+co_await awaiter等待task完成
+
+获取协程返回值和释放协程帧
+
+协程的创建:
+
+```cpp
+Return_t foo() {
+    auto res = co_await awaiter;
+    co_return res;
+}
+```
+
+foo()协程会生成下面这样的模板代码(伪代码),C++所有协程的创建都会产生类似的代码:
+
+```cpp
+{
+  co_await promise.initial_suspend();
+  try
+  {
+    coroutine body;
+  }
+  catch (...)
+  {
+    promise.unhandled_exception();
+  }
+FinalSuspend:
+  co_await promise.final_suspend();
+}
+```
+
+首先需要创建协程，创建协程之后是否挂起则由调用者设置`initial_suspend`的返回类型来确定。
+
+创建协程的流程如下:
+
+- 创建一个协程帧(coroutine frame)
+- 在协程帧里构建promise对象
+- 把协程的参数拷贝到协程帧里
+- 调用promise.get_return_object()返回给caller一个对象,即代码中的Return_t对象
+
+caller
+
 
 
 ```cpp
