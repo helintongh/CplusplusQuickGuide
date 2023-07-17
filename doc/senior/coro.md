@@ -69,7 +69,7 @@ int main() {
 
 **thread线程**: 进程中的控制流的抽象(处理器抽象(CPU))
 
-### 协程支持的四种操作:
+## 协程支持的四种操作:
 
 协程是一种特殊的子例程,尽管理论上来讲两者毫无关联,但是实际机器中协程是例程的超集。
 
@@ -89,7 +89,7 @@ int main() {
 
 ![](./resource/coro/04.png)
 
-### 协程状态
+## 协程状态
 
 例程也是有状态的,普通例程的状态等同于其内存。普通例程怎么记录时那个函数被执行的呢。
 
@@ -137,9 +137,9 @@ C语言所有函数都是这种调用.
 
 由上述可知C++协程有四个核心对象: Function Body(实际待执行的语句), coroutine_handle<>,  promise_type<>, Awaitable对象
 
-### 协程相关的对象
+## 协程相关的对象
 
-#### 协程帧(coroutine frame)
+### 协程帧(coroutine frame)
 
 当caller调用一个协程的时候会先创建一个协程帧，协程帧会创建promise对象，再通过promise对象产生return object
 
@@ -151,15 +151,15 @@ C语言所有函数都是这种调用.
 
 这些内容在协程恢复运行的时候会用到，caller通过协程帧的句柄`std::coroutine_handle`来访问协程帧。
 
-#### promise_type
+### promise_type
 
 promise_type 是 promise 对象的类型。promise_type 用于定义一类协程的行为，包括协程创建方式、协程初始化完成和结束时的行为、发生异常时的行为、如何生成 awaiter 的行为以及 co_return 的行为等等。promise 对象可以用于记录/存储一个协程实例的状态。每个协程桢与每个 promise 对象以及每个协程实例是一一对应的。
 
-#### coroutine return object
+### coroutine return object
 
 它是由promise.get_return_object()方法创建的,一种常见的实现手法是会将`coroutine_handle`存储到`coroutine object`内，使得该`return object`获得访问协程的能力。
 
-#### coroutine_handle<>
+### coroutine_handle<>
 
 协程的句柄。
 
@@ -169,7 +169,7 @@ promise_type 是 promise 对象的类型。promise_type 用于定义一类协程
 
 可以通过调用`std::coroutine_handle::resume()`唤醒协程。
 
-#### co_await、awaiter、awaitable
+### co_await、awaiter、awaitable
 
 - co_await: 一元操作符定义挂起点
 - awaitable: 支持co_await操作符的类型
@@ -215,15 +215,15 @@ awaiter对象对象需要实现至少三个方法:
 2. await_suspend(): 决定是返回caller还是继续执行
 3. await_resume(): 决定是否恢复caller
 
-这个流程的执行是由编译器根据协程函数生成的代码驱动的，分成三个部分
+上图的这个流程的执行是由编译器根据协程函数生成的代码驱动的，分成三个部分
 
 **协程创建**
 
 上面的代码语义就只有如下两句:
 
-co_await awaiter等待task完成
+`co_await awaiter`等待task完成
 
-获取协程返回值和释放协程帧
+`co_return res`获取协程返回值和释放协程帧
 
 协程的创建:
 
@@ -261,9 +261,11 @@ FinalSuspend:
 - 把协程的参数拷贝到协程帧里
 - 调用promise.get_return_object()返回给caller一个对象,即代码中的Return_t对象
 
-caller
+我们可以通过 `promise` 的 `initial_suspend` 和 `final_suspend` 返回类型来控制协程是否挂起，在 `unhandled_exception` 里处理异常，在 `return_value` 里保存协程返回值。可以根据需要定制 `initial_suspend` 和 `final_suspend` 的返回对象来决定是否需要挂起协程。如果挂起协程，代码的控制权就会返回到caller，否则继续执行协程函数体(function body)。
 
+![](./resource/coro/09.png)
 
+这里要说明
 
 ```cpp
 #include <concepts>
